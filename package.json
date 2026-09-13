@@ -7,7 +7,8 @@
     "lint:js": "eslint .",
     "lint:css": "stylelint \"blocks/**/*.css\" \"styles/*.css\"",
     "lint": "npm run lint:js && npm run lint:css",
-    "lint:fix": "npm run lint:js -- --fix && npm run lint:css -- --fix"
+    "lint:fix": "npm run lint:js -- --fix && npm run lint:css -- --fix",
+    "build:scss": "sass blocks/react-app/react-app.scss blocks/react-app/react-app.css --no-source-map"
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,13 @@
     "eslint": "8.57.1",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.32.0",
+    "sass": "^1.104.1",
     "stylelint": "17.15.0",
     "stylelint-config-standard": "40.0.0"
+  },
+  "dependencies": {
+    "gsap": "^3.15.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   }
 }
