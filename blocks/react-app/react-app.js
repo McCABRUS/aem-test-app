@@ -448,8 +448,10 @@ function ReactApp({ hero, capabilities, playground }) {
 
               <div className="react-app__cards">
                 ${capabilities.map(
-                  ({ number, title, description }) => html`
-                    <article className="react-app__card">
+                  ({ number, title, description, variant }) => html`
+                    <article
+                      className=${`react-app__card react-app__card--${variant}`}
+                    >
                       <span className="react-app__card-number">
                         ${number}
                       </span>
@@ -523,6 +525,10 @@ export default function decorate(block) {
         number: String(capabilities.length + 1).padStart(2, "0"),
         title: values[1],
         description: values[2],
+        variant: (values[3] || "default")
+          .toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^a-z0-9-]/g, ""),
       });
     }
 

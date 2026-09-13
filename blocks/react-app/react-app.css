@@ -132,6 +132,8 @@
   gap: 20px;
 }
 .react-app__card {
+  position: relative;
+  overflow: hidden;
   min-height: 280px;
   padding: 32px;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -139,8 +141,51 @@
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
   transition: border-color 0.3s ease;
 }
-.react-app__card:hover {
-  border-color: rgba(124, 92, 255, 0.7);
+.react-app__card-number, .react-app__card h3, .react-app__card p {
+  position: relative;
+  z-index: 1;
+}
+.react-app__card--frontend {
+  background: linear-gradient(145deg, rgba(124, 92, 255, 0.16), rgba(255, 255, 255, 0.02));
+}
+.react-app__card--frontend .react-app__card-number {
+  color: #7c5cff;
+}
+.react-app__card--animation {
+  background: linear-gradient(145deg, rgba(0, 216, 255, 0.14), rgba(255, 255, 255, 0.02));
+}
+.react-app__card--animation .react-app__card-number {
+  color: #00d8ff;
+}
+.react-app__card--styling {
+  background: linear-gradient(145deg, rgba(255, 77, 157, 0.14), rgba(255, 255, 255, 0.02));
+}
+.react-app__card--styling .react-app__card-number {
+  color: #ff4d9d;
+}
+.react-app__card--frontend::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 80% 20%, rgba(124, 92, 255, 0.18), transparent 35%);
+  pointer-events: none;
+}
+.react-app__card--animation::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 80% 20%, rgba(0, 216, 255, 0.18), transparent 35%);
+  pointer-events: none;
+}
+.react-app__card--styling::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 80% 20%, rgba(255, 77, 157, 0.16), transparent 35%);
+  pointer-events: none;
 }
 .react-app__card-number {
   color: #7c5cff;
