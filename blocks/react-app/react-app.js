@@ -108,8 +108,8 @@ function ReactApp({ hero, capabilities, playground }) {
 
         if (!reduceMotion) {
           gsap.to(".react-app__grid", {
-            backgroundPosition: isMobile ? "30px 30px" : "60px 60px",
-            duration: isMobile ? 12 : 8,
+            backgroundPosition: isMobile ? "40px 40px" : "60px 60px",
+            duration: isMobile ? 18 : 10,
             repeat: -1,
             ease: "none",
           });
@@ -117,7 +117,7 @@ function ReactApp({ hero, capabilities, playground }) {
 
         if (!reduceMotion && isDesktop) {
           gsap.to(".react-app__grid", {
-            yPercent: 10,
+            yPercent: 8,
             ease: "none",
             scrollTrigger: {
               trigger: heroElement,
@@ -128,7 +128,7 @@ function ReactApp({ hero, capabilities, playground }) {
           });
         }
 
-        if (!reduceMotion && orbMotion && !isMobile) {
+        if (!reduceMotion && orbMotion && isDesktop) {
           gsap.to(orbMotion, {
             x: 100,
             y: -50,
@@ -149,6 +149,16 @@ function ReactApp({ hero, capabilities, playground }) {
           });
         }
 
+        const moveOrbX = gsap.quickTo(orb, "x", {
+          duration: 1,
+          ease: "power3.out",
+        });
+
+        const moveOrbY = gsap.quickTo(orb, "y", {
+          duration: 1,
+          ease: "power3.out",
+        });
+
         const pointerMove = (event) => {
           if (reduceMotion || !isDesktop) {
             return;
@@ -158,12 +168,8 @@ function ReactApp({ hero, capabilities, playground }) {
 
           const y = (event.clientY / window.innerHeight - 0.5) * 30;
 
-          gsap.to(orb, {
-            x,
-            y,
-            duration: 1.2,
-            ease: "power3.out",
-          });
+          moveOrbX(x);
+          moveOrbY(y);
         };
 
         if (isDesktop && !reduceMotion) {
@@ -218,22 +224,24 @@ function ReactApp({ hero, capabilities, playground }) {
 
         if (isDesktop && !reduceMotion) {
           cards.forEach((card) => {
+            const moveCardY = gsap.quickTo(card, "y", {
+              duration: 0.3,
+              ease: "power2.out",
+            });
+
+            const moveCardScale = gsap.quickTo(card, "scale", {
+              duration: 0.3,
+              ease: "power2.out",
+            });
+
             const handleEnter = () => {
-              gsap.to(card, {
-                y: -10,
-                scale: 1.02,
-                duration: 0.3,
-                ease: "power2.out",
-              });
+              moveCardY(-10);
+              moveCardScale(1.02);
             };
 
             const handleLeave = () => {
-              gsap.to(card, {
-                y: 0,
-                scale: 1,
-                duration: 0.4,
-                ease: "power2.out",
-              });
+              moveCardY(0);
+              moveCardScale(1);
             };
 
             card.addEventListener("mouseenter", handleEnter);
@@ -390,7 +398,6 @@ function ReactApp({ hero, capabilities, playground }) {
           });
         };
       },
-      heroElement,
     );
 
     return () => {
@@ -435,6 +442,7 @@ function ReactApp({ hero, capabilities, playground }) {
             <section className="react-app__section" id="capabilities">
               <div className="react-app__section-header">
                 <span>01</span>
+
                 <h2>Capabilities</h2>
               </div>
 
