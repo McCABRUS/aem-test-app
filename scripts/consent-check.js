@@ -37,7 +37,9 @@ function loadConsented() {
  */
 function onConsentUpdate() {
   const consented = hasConsent();
-  window.dispatchEvent(new CustomEvent('consent.update', { detail: { consented } }));
+  window.dispatchEvent(
+    new CustomEvent('consent.update', { detail: { consented } }),
+  );
   if (consented) {
     loadConsented();
   }

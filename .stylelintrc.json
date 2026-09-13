@@ -1,3 +1,12 @@
 {
-  "extends": ["stylelint-config-standard"]
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "selector-class-pattern": null,
+    "color-function-alias-notation": null,
+    "alpha-value-notation": "number",
+    "media-feature-range-notation": null,
+    "no-descending-specificity": null,
+    "rule-empty-line-before": "always",
+    "at-rule-empty-line-before": "always"
+  }
 }

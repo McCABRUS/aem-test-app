@@ -21,12 +21,23 @@ if (window.trustedTypes && window.trustedTypes.createPolicy) {
     createHTML: (input, type, sink) => {
       let processedInput = input;
       if (/srcdoc\s*=/i.test(processedInput)) {
-        const doc = new DOMParser().parseFromString(innerTT.createHTML(processedInput), 'text/html');
-        doc.querySelectorAll('iframe[srcdoc]').forEach((el) => el.removeAttribute('srcdoc'));
+        const doc = new DOMParser().parseFromString(
+          innerTT.createHTML(processedInput),
+          'text/html',
+        );
+        doc
+          .querySelectorAll('iframe[srcdoc]')
+          .forEach((el) => el.removeAttribute('srcdoc'));
         processedInput = doc.body.innerHTML;
       }
-      if (sink.includes('createContextualFragment') || sink.includes('Document write')) {
-        const doc = new DOMParser().parseFromString(innerTT.createHTML(processedInput), 'text/html');
+      if (
+        sink.includes('createContextualFragment') ||
+        sink.includes('Document write')
+      ) {
+        const doc = new DOMParser().parseFromString(
+          innerTT.createHTML(processedInput),
+          'text/html',
+        );
         doc.querySelectorAll('script').forEach((el) => el.remove());
         processedInput = doc.body.innerHTML;
       }
@@ -43,7 +54,8 @@ if (window.trustedTypes && window.trustedTypes.createPolicy) {
 async function loadFonts() {
   await loadCSS(`${window.hlx.codeBasePath}/styles/fonts.css`);
   try {
-    if (!window.location.hostname.includes('localhost')) sessionStorage.setItem('fonts-loaded', 'true');
+    if (!window.location.hostname.includes('localhost'))
+      sessionStorage.setItem('fonts-loaded', 'true');
   } catch (e) {
     // do nothing
   }
@@ -61,10 +73,10 @@ function buildWidgetAutoBlocks(main) {
     const widgetBlock = buildBlock('widget', { elems: [newLink] });
     const p = link.closest('p');
     if (
-      p
-      && p.querySelectorAll('a').length === 1
-      && p.querySelector('a') === link
-      && p.textContent.trim() === link.textContent.trim()
+      p &&
+      p.querySelectorAll('a').length === 1 &&
+      p.querySelector('a') === link &&
+      p.textContent.trim() === link.textContent.trim()
     ) {
       p.replaceWith(widgetBlock);
     } else {
@@ -80,7 +92,9 @@ function buildWidgetAutoBlocks(main) {
 function buildAutoBlocks(main) {
   try {
     // auto load `*/fragments/*` references
-    const fragments = [...main.querySelectorAll('a[href*="/fragments/"]')].filter((f) => !f.closest('.fragment'));
+    const fragments = [
+      ...main.querySelectorAll('a[href*="/fragments/"]'),
+    ].filter((f) => !f.closest('.fragment'));
     if (fragments.length > 0) {
       // eslint-disable-next-line import/no-cycle
       import('../blocks/fragment/fragment.js').then(({ loadFragment }) => {
@@ -119,7 +133,9 @@ function decorateButtons(main) {
     // skip URL display links
     try {
       if (new URL(a.href).href === new URL(text, window.location).href) return;
-    } catch { /* continue */ }
+    } catch {
+      /* continue */
+    }
 
     // require authored formatting for buttonization
     const strong = a.closest('strong');
@@ -128,7 +144,8 @@ function decorateButtons(main) {
 
     p.className = 'button-wrapper';
     a.className = 'button';
-    if (strong && em) { // high-impact call-to-action
+    if (strong && em) {
+      // high-impact call-to-action
       a.classList.add('accent');
       const outer = strong.contains(em) ? strong : em;
       outer.replaceWith(a);

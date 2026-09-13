@@ -13,17 +13,21 @@
 /* eslint-env browser */
 function sampleRUM(checkpoint, data) {
   // eslint-disable-next-line max-len
-  const timeShift = () => (window.performance ? window.performance.now() : Date.now() - window.hlx.rum.firstReadTime);
+  const timeShift = () =>
+    window.performance
+      ? window.performance.now()
+      : Date.now() - window.hlx.rum.firstReadTime;
   try {
     window.hlx = window.hlx || {};
     if (!window.hlx.rum || !window.hlx.rum.collector) {
       sampleRUM.enhance = () => {};
       const params = new URLSearchParams(window.location.search);
       const { currentScript } = document;
-      const rate = params.get('rum')
-        || window.SAMPLE_PAGEVIEWS_AT_RATE
-        || params.get('optel')
-        || (currentScript && currentScript.dataset.rate);
+      const rate =
+        params.get('rum') ||
+        window.SAMPLE_PAGEVIEWS_AT_RATE ||
+        params.get('optel') ||
+        (currentScript && currentScript.dataset.rate);
       const rateValue = {
         on: 1,
         off: 0,
@@ -32,15 +36,19 @@ function sampleRUM(checkpoint, data) {
         low: 1000,
       }[rate];
       const weight = rateValue !== undefined ? rateValue : 100;
-      const id = (window.hlx.rum && window.hlx.rum.id) || crypto.randomUUID().slice(-9);
-      const isSelected = (window.hlx.rum && window.hlx.rum.isSelected)
-        || (weight > 0 && Math.random() * weight < 1);
+      const id =
+        (window.hlx.rum && window.hlx.rum.id) || crypto.randomUUID().slice(-9);
+      const isSelected =
+        (window.hlx.rum && window.hlx.rum.isSelected) ||
+        (weight > 0 && Math.random() * weight < 1);
       // eslint-disable-next-line object-curly-newline, max-len
       window.hlx.rum = {
         weight,
         id,
         isSelected,
-        firstReadTime: window.performance ? window.performance.timeOrigin : Date.now(),
+        firstReadTime: window.performance
+          ? window.performance.timeOrigin
+          : Date.now(),
         sampleRUM,
         queue: [],
         collector: (...args) => window.hlx.rum.queue.push(args),
@@ -82,7 +90,10 @@ function sampleRUM(checkpoint, data) {
         });
 
         window.addEventListener('securitypolicyviolation', (e) => {
-          if (e.blockedURI.includes('helix-rum-enhancer') && e.disposition === 'enforce') {
+          if (
+            e.blockedURI.includes('helix-rum-enhancer') &&
+            e.disposition === 'enforce'
+          ) {
             const errData = {
               source: 'csp',
               target: e.blockedURI,
@@ -91,12 +102,16 @@ function sampleRUM(checkpoint, data) {
           }
         });
 
-        sampleRUM.baseURL = sampleRUM.baseURL || new URL(window.RUM_BASE || '/', new URL('https://ot.aem.live'));
-        sampleRUM.collectBaseURL = sampleRUM.collectBaseURL || sampleRUM.baseURL;
+        sampleRUM.baseURL =
+          sampleRUM.baseURL ||
+          new URL(window.RUM_BASE || '/', new URL('https://ot.aem.live'));
+        sampleRUM.collectBaseURL =
+          sampleRUM.collectBaseURL || sampleRUM.baseURL;
         sampleRUM.sendPing = (ck, time, pingData = {}) => {
-          const uaExtra = navigator.webdriver && !navigator.userAgent.includes('+http')
-            ? { ua: `${navigator.userAgent} +http://navigator.webdriver` }
-            : {};
+          const uaExtra =
+            navigator.webdriver && !navigator.userAgent.includes('+http')
+              ? { ua: `${navigator.userAgent} +http://navigator.webdriver` }
+              : {};
           // eslint-disable-next-line max-len, object-curly-newline
           const rumData = JSON.stringify({
             weight,
@@ -114,9 +129,10 @@ function sampleRUM(checkpoint, data) {
             `.rum/${weight}${urlParams ? `?${urlParams}` : ''}`,
             sampleRUM.collectBaseURL,
           );
-          const body = origin === window.location.origin
-            ? new Blob([rumData], { type: 'application/json' })
-            : rumData;
+          const body =
+            origin === window.location.origin
+              ? new Blob([rumData], { type: 'application/json' })
+              : rumData;
           navigator.sendBeacon(url, body);
           // eslint-disable-next-line no-console
           console.debug(`ping:${ck}`, pingData);
@@ -128,7 +144,8 @@ function sampleRUM(checkpoint, data) {
           if (document.querySelector('script[src*="rum-enhancer"]')) {
             return;
           }
-          const { enhancerVersion, enhancerHash } = sampleRUM.enhancerContext || {};
+          const { enhancerVersion, enhancerHash } =
+            sampleRUM.enhancerContext || {};
           const script = document.createElement('script');
           if (enhancerHash) {
             script.integrity = enhancerHash;
@@ -148,7 +165,9 @@ function sampleRUM(checkpoint, data) {
     if (window.hlx.rum && window.hlx.rum.isSelected && checkpoint) {
       window.hlx.rum.collector(checkpoint, data, timeShift());
     }
-    document.dispatchEvent(new CustomEvent('rum', { detail: { checkpoint, data } }));
+    document.dispatchEvent(
+      new CustomEvent('rum', { detail: { checkpoint, data } }),
+    );
   } catch (error) {
     // something went awry
   }
@@ -161,7 +180,8 @@ function setup(importUrl = import.meta.url) {
   window.hlx = window.hlx || {};
   window.hlx.RUM_MASK_URL = 'full';
   window.hlx.RUM_MANUAL_ENHANCE = true;
-  window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
+  window.hlx.lighthouse =
+    new URLSearchParams(window.location.search).get('lighthouse') === 'on';
 
   [window.hlx.codeBasePath] = new URL(importUrl).pathname.split('/scripts/');
 }
@@ -171,7 +191,10 @@ function setup(importUrl = import.meta.url) {
  */
 function init() {
   setup();
-  sampleRUM.collectBaseURL = new URL(`${window.hlx.codeBasePath}/`, window.origin);
+  sampleRUM.collectBaseURL = new URL(
+    `${window.hlx.codeBasePath}/`,
+    window.origin,
+  );
   sampleRUM();
 }
 
@@ -183,10 +206,10 @@ function init() {
 function toClassName(name) {
   return typeof name === 'string'
     ? name
-      .toLowerCase()
-      .replace(/[^0-9a-z]/gi, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '')
+        .toLowerCase()
+        .replace(/[^0-9a-z]/gi, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
     : '';
 }
 
@@ -313,9 +336,14 @@ function createOptimizedPicture(
   src,
   alt = '',
   eager = false,
-  breakpoints = [{ media: '(min-width: 600px)', width: '2000' }, { width: '750' }],
+  breakpoints = [
+    { media: '(min-width: 600px)', width: '2000' },
+    { width: '750' },
+  ],
 ) {
-  const url = !src.startsWith('http') ? new URL(src, window.location.href) : new URL(src);
+  const url = !src.startsWith('http')
+    ? new URL(src, window.location.href)
+    : new URL(src);
   const picture = document.createElement('picture');
   const { origin, pathname } = url;
   const ext = pathname.split('.').pop();
@@ -401,13 +429,16 @@ function wrapTextNodes(block) {
 
   block.querySelectorAll(':scope > div > div').forEach((blockColumn) => {
     if (blockColumn.hasChildNodes()) {
-      const hasWrapper = !!blockColumn.firstElementChild
-        && validWrappers.some((tagName) => blockColumn.firstElementChild.tagName === tagName);
+      const hasWrapper =
+        !!blockColumn.firstElementChild &&
+        validWrappers.some(
+          (tagName) => blockColumn.firstElementChild.tagName === tagName,
+        );
       if (!hasWrapper) {
         wrap(blockColumn);
       } else if (
-        blockColumn.firstElementChild.tagName === 'PICTURE'
-        && (blockColumn.children.length > 1 || !!blockColumn.textContent.trim())
+        blockColumn.firstElementChild.tagName === 'PICTURE' &&
+        (blockColumn.children.length > 1 || !!blockColumn.textContent.trim())
       ) {
         wrap(blockColumn);
       }
@@ -513,7 +544,9 @@ async function loadBlock(block) {
     block.dataset.blockStatus = 'loading';
     const { blockName } = block.dataset;
     try {
-      const cssLoaded = loadCSS(`${window.hlx.codeBasePath}/blocks/${blockName}/${blockName}.css`);
+      const cssLoaded = loadCSS(
+        `${window.hlx.codeBasePath}/blocks/${blockName}/${blockName}.css`,
+      );
       const decorationComplete = new Promise((resolve) => {
         (async () => {
           try {

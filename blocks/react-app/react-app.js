@@ -1,39 +1,39 @@
-import React, { useEffect, useRef } from "https://esm.sh/react@19";
-import { createRoot } from "https://esm.sh/react-dom@19/client";
-import gsap from "https://esm.sh/gsap";
-import { ScrollTrigger } from "https://esm.sh/gsap/ScrollTrigger";
-import htm from "https://esm.sh/htm@3.1.1";
+import React, { useEffect, useRef } from 'https://esm.sh/react@19';
+import { createRoot } from 'https://esm.sh/react-dom@19/client';
+import gsap from 'https://esm.sh/gsap';
+import { ScrollTrigger } from 'https://esm.sh/gsap/ScrollTrigger';
+import htm from 'https://esm.sh/htm@3.1.1';
 
 const html = htm.bind(React.createElement);
 
 gsap.registerPlugin(ScrollTrigger);
 
 const CAPABILITY_VARIANTS = new Set([
-  "frontend",
-  "animation",
-  "styling",
-  "default",
+  'frontend',
+  'animation',
+  'styling',
+  'default',
 ]);
 
 function normalizeVariant(value) {
-  const normalized = (value || "default")
+  const normalized = (value || 'default')
     .trim()
     .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9-]/g, "");
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '');
 
-  return CAPABILITY_VARIANTS.has(normalized) ? normalized : "default";
+  return CAPABILITY_VARIANTS.has(normalized) ? normalized : 'default';
 }
 
 function parseHero(values) {
-  if (values.length < 4 || values[0] !== "Hero") {
+  if (values.length < 4 || values[0] !== 'Hero') {
     return null;
   }
 
   const eyebrow = values[1].trim();
 
   const title = values[2]
-    .split("|")
+    .split('|')
     .map((line) => line.trim())
     .filter(Boolean);
 
@@ -51,7 +51,7 @@ function parseHero(values) {
 }
 
 function parseCapability(values, index) {
-  if (values.length < 3 || values[0] !== "Capabilities") {
+  if (values.length < 3 || values[0] !== 'Capabilities') {
     return null;
   }
 
@@ -63,7 +63,7 @@ function parseCapability(values, index) {
   }
 
   return {
-    number: String(index + 1).padStart(2, "0"),
+    number: String(index + 1).padStart(2, '0'),
     title,
     description,
     variant: normalizeVariant(values[3]),
@@ -71,7 +71,7 @@ function parseCapability(values, index) {
 }
 
 function parsePlayground(values) {
-  if (values.length < 3 || values[0] !== "Playground") {
+  if (values.length < 3 || values[0] !== 'Playground') {
     return null;
   }
 
@@ -89,7 +89,7 @@ function parsePlayground(values) {
 }
 
 function parseArchitecture(values) {
-  if (values.length < 4 || values[0] !== "Architecture") {
+  if (values.length < 4 || values[0] !== 'Architecture') {
     return null;
   }
 
@@ -106,7 +106,7 @@ function parseArchitecture(values) {
 
   return {
     title,
-    description: "From authored content to interactive presentation.",
+    description: 'From authored content to interactive presentation.',
     nodes,
   };
 }
@@ -129,7 +129,7 @@ function parseContent(block) {
 
     const values = cells.map((cell) => cell.textContent.trim());
 
-    if (values.length === 1 && values[0] === "React App") {
+    if (values.length === 1 && values[0] === 'React App') {
       return;
     }
 
@@ -142,7 +142,7 @@ function parseContent(block) {
       }
     }
 
-    if (values[0] === "Capabilities") {
+    if (values[0] === 'Capabilities') {
       const capability = parseCapability(values, capabilities.length);
 
       if (capability) {
@@ -194,40 +194,40 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
 
     const mm = gsap.matchMedia();
 
-    const orbMotion = orb.querySelector(".react-app__orb-motion");
+    const orbMotion = orb.querySelector('.react-app__orb-motion');
 
-    const orbInner = orb.querySelector(".react-app__orb-inner");
+    const orbInner = orb.querySelector('.react-app__orb-inner');
 
-    const cards = gsap.utils.toArray(".react-app__card");
+    const cards = gsap.utils.toArray('.react-app__card');
 
-    const playgroundElement = document.querySelector(".react-app__playground");
+    const playgroundElement = document.querySelector('.react-app__playground');
 
     const architectureElement = document.querySelector(
-      ".react-app__architecture",
+      '.react-app__architecture',
     );
 
     mm.add(
       {
-        isDesktop: "(min-width: 901px)",
-        isMobile: "(max-width: 900px)",
-        reduceMotion: "(prefers-reduced-motion: reduce)",
+        isDesktop: '(min-width: 901px)',
+        isMobile: '(max-width: 900px)',
+        reduceMotion: '(prefers-reduced-motion: reduce)',
       },
       (context) => {
         const { isDesktop, isMobile, reduceMotion } = context.conditions;
 
         const intro = gsap.timeline();
 
-        gsap.set(".react-app__title-line", {
+        gsap.set('.react-app__title-line', {
           transformPerspective: 800,
         });
 
         if (reduceMotion) {
           gsap.set(
             [
-              ".react-app__eyebrow",
-              ".react-app__title-line",
-              ".react-app__description",
-              ".react-app__actions",
+              '.react-app__eyebrow',
+              '.react-app__title-line',
+              '.react-app__description',
+              '.react-app__actions',
             ],
             {
               opacity: 1,
@@ -238,67 +238,67 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
             },
           );
         } else {
-          intro.from(".react-app__eyebrow", {
+          intro.from('.react-app__eyebrow', {
             opacity: 0,
             y: isMobile ? 12 : 20,
             duration: isMobile ? 0.5 : 0.8,
-            ease: "power3.out",
+            ease: 'power3.out',
           });
 
           intro.from(
-            ".react-app__title-line",
+            '.react-app__title-line',
             {
               opacity: 0,
               y: isMobile ? 50 : 100,
               rotateX: isMobile ? 20 : 40,
-              transformOrigin: "center bottom",
+              transformOrigin: 'center bottom',
               duration: isMobile ? 0.7 : 1,
               stagger: isMobile ? 0.1 : 0.18,
-              ease: "power4.out",
+              ease: 'power4.out',
             },
-            "-=0.3",
+            '-=0.3',
           );
 
           intro.from(
-            ".react-app__description",
+            '.react-app__description',
             {
               opacity: 0,
               y: isMobile ? 20 : 30,
               duration: isMobile ? 0.5 : 0.7,
-              ease: "power3.out",
+              ease: 'power3.out',
             },
-            "-=0.35",
+            '-=0.35',
           );
 
           intro.from(
-            ".react-app__actions",
+            '.react-app__actions',
             {
               opacity: 0,
               y: 15,
               duration: 0.5,
-              ease: "power3.out",
+              ease: 'power3.out',
             },
-            "-=0.25",
+            '-=0.25',
           );
         }
 
         if (!reduceMotion) {
-          gsap.to(".react-app__grid", {
-            backgroundPosition: isMobile ? "40px 40px" : "60px 60px",
+          gsap.to('.react-app__grid', {
+            backgroundPosition: isMobile ? '40px 40px' : '60px 60px',
             duration: isMobile ? 18 : 10,
             repeat: -1,
-            ease: "none",
+            ease: 'none',
           });
         }
 
         if (!reduceMotion && isDesktop) {
-          gsap.to(".react-app__grid", {
+          gsap.to('.react-app__grid', {
             yPercent: 8,
-            ease: "none",
+            ease: 'none',
             scrollTrigger: {
               trigger: heroElement,
-              start: "top top",
-              end: "bottom top",
+              start: 'top top',
+              end: 'bottom top',
               scrub: true,
             },
           });
@@ -311,7 +311,7 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
             duration: 6,
             repeat: -1,
             yoyo: true,
-            ease: "sine.inOut",
+            ease: 'sine.inOut',
           });
         }
 
@@ -321,18 +321,18 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
             scale: isMobile ? 1.04 : 1.08,
             duration: isMobile ? 16 : 10,
             repeat: -1,
-            ease: "none",
+            ease: 'none',
           });
         }
 
-        const moveOrbX = gsap.quickTo(orb, "x", {
+        const moveOrbX = gsap.quickTo(orb, 'x', {
           duration: 1,
-          ease: "power3.out",
+          ease: 'power3.out',
         });
 
-        const moveOrbY = gsap.quickTo(orb, "y", {
+        const moveOrbY = gsap.quickTo(orb, 'y', {
           duration: 1,
-          ease: "power3.out",
+          ease: 'power3.out',
         });
 
         const pointerMove = (event) => {
@@ -349,21 +349,21 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
         };
 
         if (isDesktop && !reduceMotion) {
-          window.addEventListener("pointermove", pointerMove);
+          window.addEventListener('pointermove', pointerMove);
         }
 
         if (!reduceMotion) {
-          gsap.to(".react-app__button", {
+          gsap.to('.react-app__button', {
             y: -5,
             duration: 1.5,
             repeat: -1,
             yoyo: true,
-            ease: "sine.inOut",
+            ease: 'sine.inOut',
           });
         }
 
         if (reduceMotion) {
-          gsap.set(".react-app__card", {
+          gsap.set('.react-app__card', {
             opacity: 1,
             y: 0,
             scale: 1,
@@ -385,10 +385,10 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
                 scale: 1,
                 rotateX: 0,
                 duration: isMobile ? 0.7 : 1,
-                ease: "power3.out",
+                ease: 'power3.out',
                 scrollTrigger: {
                   trigger: card,
-                  start: "top 85%",
+                  start: 'top 85%',
                   once: true,
                 },
               },
@@ -400,14 +400,14 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
 
         if (isDesktop && !reduceMotion) {
           cards.forEach((card) => {
-            const moveCardY = gsap.quickTo(card, "y", {
+            const moveCardY = gsap.quickTo(card, 'y', {
               duration: 0.3,
-              ease: "power2.out",
+              ease: 'power2.out',
             });
 
-            const moveCardScale = gsap.quickTo(card, "scale", {
+            const moveCardScale = gsap.quickTo(card, 'scale', {
               duration: 0.3,
-              ease: "power2.out",
+              ease: 'power2.out',
             });
 
             const handleEnter = () => {
@@ -420,9 +420,9 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
               moveCardScale(1);
             };
 
-            card.addEventListener("mouseenter", handleEnter);
+            card.addEventListener('mouseenter', handleEnter);
 
-            card.addEventListener("mouseleave", handleLeave);
+            card.addEventListener('mouseleave', handleLeave);
 
             cardHandlers.push({
               card,
@@ -434,18 +434,18 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
 
         if (playgroundElement) {
           const playgroundCircle = playgroundElement.querySelector(
-            ".react-app__playground-circle",
+            '.react-app__playground-circle',
           );
 
           const playgroundContent = playgroundElement.querySelector(
-            ":scope > div:last-child",
+            ':scope > div:last-child',
           );
 
-          const playgroundNumber = playgroundContent?.querySelector("span");
+          const playgroundNumber = playgroundContent?.querySelector('span');
 
-          const playgroundTitle = playgroundContent?.querySelector("h2");
+          const playgroundTitle = playgroundContent?.querySelector('h2');
 
-          const playgroundDescription = playgroundContent?.querySelector("p");
+          const playgroundDescription = playgroundContent?.querySelector('p');
 
           if (reduceMotion) {
             gsap.set(
@@ -470,7 +470,7 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
             const playgroundTimeline = gsap.timeline({
               scrollTrigger: {
                 trigger: playgroundElement,
-                start: "top 75%",
+                start: 'top 75%',
                 once: true,
               },
             });
@@ -488,7 +488,7 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
                   scale: 1,
                   rotation: 0,
                   duration: isMobile ? 1.2 : 1.8,
-                  ease: "power4.out",
+                  ease: 'power4.out',
                 },
               );
             }
@@ -504,9 +504,9 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
                   opacity: 1,
                   y: 0,
                   duration: 0.5,
-                  ease: "power3.out",
+                  ease: 'power3.out',
                 },
-                "-=0.9",
+                '-=0.9',
               );
             }
 
@@ -525,9 +525,9 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
                   scale: 1,
                   rotateX: 0,
                   duration: isMobile ? 0.9 : 1.4,
-                  ease: "power4.out",
+                  ease: 'power4.out',
                 },
-                "-=0.8",
+                '-=0.8',
               );
             }
 
@@ -542,9 +542,9 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
                   opacity: 1,
                   y: 0,
                   duration: 0.7,
-                  ease: "power3.out",
+                  ease: 'power3.out',
                 },
-                "-=0.5",
+                '-=0.5',
               );
             }
 
@@ -555,7 +555,7 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
                 duration: isMobile ? 9 : 6,
                 repeat: -1,
                 yoyo: true,
-                ease: "sine.inOut",
+                ease: 'sine.inOut',
                 delay: isMobile ? 1.2 : 1.8,
               });
             }
@@ -564,15 +564,15 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
 
         if (architectureElement) {
           const architectureHeader = architectureElement.querySelector(
-            ".react-app__architecture-header",
+            '.react-app__architecture-header',
           );
 
           const architectureNodes = gsap.utils.toArray(
-            ".react-app__architecture-node",
+            '.react-app__architecture-node',
           );
 
           const architectureConnectors = gsap.utils.toArray(
-            ".react-app__architecture-connector",
+            '.react-app__architecture-connector',
           );
 
           if (reduceMotion) {
@@ -595,7 +595,7 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
             const architectureTimeline = gsap.timeline({
               scrollTrigger: {
                 trigger: architectureElement,
-                start: "top 75%",
+                start: 'top 75%',
                 once: true,
               },
             });
@@ -611,7 +611,7 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
                   opacity: 1,
                   y: 0,
                   duration: isMobile ? 0.6 : 0.8,
-                  ease: "power3.out",
+                  ease: 'power3.out',
                 },
               );
             }
@@ -629,9 +629,9 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
                   y: 0,
                   scale: 1,
                   duration: isMobile ? 0.6 : 0.7,
-                  ease: "power3.out",
+                  ease: 'power3.out',
                 },
-                index === 0 ? "-=0.2" : "-=0.4",
+                index === 0 ? '-=0.2' : '-=0.4',
               );
 
               if (architectureConnectors[index]) {
@@ -643,9 +643,9 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
                   {
                     scaleX: 1,
                     duration: isMobile ? 0.35 : 0.5,
-                    ease: "power2.out",
+                    ease: 'power2.out',
                   },
-                  "-=0.3",
+                  '-=0.3',
                 );
               }
             });
@@ -654,13 +654,13 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
 
         return () => {
           if (isDesktop && !reduceMotion) {
-            window.removeEventListener("pointermove", pointerMove);
+            window.removeEventListener('pointermove', pointerMove);
           }
 
           cardHandlers.forEach(({ card, handleEnter, handleLeave }) => {
-            card.removeEventListener("mouseenter", handleEnter);
+            card.removeEventListener('mouseenter', handleEnter);
 
-            card.removeEventListener("mouseleave", handleLeave);
+            card.removeEventListener('mouseleave', handleLeave);
           });
         };
       },
@@ -707,25 +707,26 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
         </div>
       </section>
 
-      ${capabilities.length
-        ? html`
-            <section
-              className="react-app__section"
-              id="capabilities"
-              aria-labelledby="capabilities-title"
-            >
-              <div className="react-app__section-header">
-                <span>01</span>
+      ${
+        capabilities.length
+          ? html`
+              <section
+                className="react-app__section"
+                id="capabilities"
+                aria-labelledby="capabilities-title"
+              >
+                <div className="react-app__section-header">
+                  <span>01</span>
 
-                <h2 id="capabilities-title">Capabilities</h2>
-              </div>
+                  <h2 id="capabilities-title">Capabilities</h2>
+                </div>
 
-              <div className="react-app__cards">
-                ${capabilities.map(
+                <div className="react-app__cards">
+                  ${capabilities.map(
                   ({ number, title, description, variant }) => html`
                     <article
                       className=${`react-app__card react-app__card--${
-                        variant || "default"
+                        variant || 'default'
                       }`}
                     >
                       <span className="react-app__card-number">
@@ -738,75 +739,82 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
                     </article>
                   `,
                 )}
-              </div>
-            </section>
-          `
-        : ""}
-      ${playground
-        ? html`
-            <section
-              className="react-app__playground"
-              id="playground"
-              aria-labelledby="playground-title"
-            >
-              <div
-                className="react-app__playground-circle"
-                aria-hidden="true"
-              ></div>
-
-              <div>
-                <span>02</span>
-
-                <h2 id="playground-title">${playground.title}</h2>
-
-                <p>${playground.description}</p>
-              </div>
-            </section>
-          `
-        : ""}
-      ${architecture
-        ? html`
-            <section
-              className="react-app__architecture"
-              id="architecture"
-              aria-labelledby="architecture-title"
-            >
-              <div className="react-app__architecture-header">
-                <span>03</span>
+                </div>
+              </section>
+            `
+          : ''
+      }
+      ${
+        playground
+          ? html`
+              <section
+                className="react-app__playground"
+                id="playground"
+                aria-labelledby="playground-title"
+              >
+                <div
+                  className="react-app__playground-circle"
+                  aria-hidden="true"
+                ></div>
 
                 <div>
-                  <h2 id="architecture-title">${architecture.title}</h2>
+                  <span>02</span>
 
-                  <p>${architecture.description}</p>
+                  <h2 id="playground-title">${playground.title}</h2>
+
+                  <p>${playground.description}</p>
                 </div>
-              </div>
-
-              <div
-                className="react-app__architecture-flow"
-                aria-label="Application architecture"
+              </section>
+            `
+          : ''
+      }
+      ${
+        architecture
+          ? html`
+              <section
+                className="react-app__architecture"
+                id="architecture"
+                aria-labelledby="architecture-title"
               >
-                ${architecture.nodes.map(
+                <div className="react-app__architecture-header">
+                  <span>03</span>
+
+                  <div>
+                    <h2 id="architecture-title">${architecture.title}</h2>
+
+                    <p>${architecture.description}</p>
+                  </div>
+                </div>
+
+                <div
+                  className="react-app__architecture-flow"
+                  aria-label="Application architecture"
+                >
+                  ${architecture.nodes.map(
                   (node, index) => html`
                     <div className="react-app__architecture-node">
-                      <span> ${String(index + 1).padStart(2, "0")} </span>
+                      <span> ${String(index + 1).padStart(2, '0')} </span>
 
                       <strong> ${node} </strong>
                     </div>
 
-                    ${index < architecture.nodes.length - 1
-                      ? html`
-                          <div
-                            className="react-app__architecture-connector"
-                            aria-hidden="true"
-                          ></div>
-                        `
-                      : ""}
+                    ${
+                      index < architecture.nodes.length - 1
+                        ? html`
+                            <div
+                              className="react-app__architecture-connector"
+                              aria-hidden="true"
+                            ></div>
+                          `
+                        : ''
+                    }
                   `,
                 )}
-              </div>
-            </section>
-          `
-        : ""}
+                </div>
+              </section>
+            `
+          : ''
+      }
     </main>
   `;
 }
