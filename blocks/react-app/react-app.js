@@ -746,6 +746,7 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
         ? html`
             <section
               className="react-app__playground"
+              id="playground"
               aria-labelledby="playground-title"
             >
               <div
@@ -767,6 +768,7 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
         ? html`
             <section
               className="react-app__architecture"
+              id="architecture"
               aria-labelledby="architecture-title"
             >
               <div className="react-app__architecture-header">
