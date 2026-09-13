@@ -8,7 +8,7 @@ const html = htm.bind(React.createElement);
 
 gsap.registerPlugin(ScrollTrigger);
 
-function ReactApp({ hero, capabilities, playground }) {
+function ReactApp({ hero, capabilities, playground, architecture }) {
   const heroRef = useRef(null);
   const orbRef = useRef(null);
 
@@ -29,6 +29,10 @@ function ReactApp({ hero, capabilities, playground }) {
     const cards = gsap.utils.toArray(".react-app__card");
 
     const playgroundElement = document.querySelector(".react-app__playground");
+
+    const architectureElement = document.querySelector(
+      ".react-app__architecture",
+    );
 
     mm.add(
       {
@@ -386,6 +390,96 @@ function ReactApp({ hero, capabilities, playground }) {
           }
         }
 
+        if (architectureElement) {
+          const architectureHeader = architectureElement.querySelector(
+            ".react-app__architecture-header",
+          );
+
+          const architectureNodes = gsap.utils.toArray(
+            ".react-app__architecture-node",
+          );
+
+          const architectureConnectors = gsap.utils.toArray(
+            ".react-app__architecture-connector",
+          );
+
+          if (reduceMotion) {
+            gsap.set(
+              [
+                architectureHeader,
+                ...architectureNodes,
+                ...architectureConnectors,
+              ],
+              {
+                opacity: 1,
+                x: 0,
+                y: 0,
+                scale: 1,
+                scaleX: 1,
+                rotation: 0,
+              },
+            );
+          } else {
+            const architectureTimeline = gsap.timeline({
+              scrollTrigger: {
+                trigger: architectureElement,
+                start: "top 75%",
+                once: true,
+              },
+            });
+
+            if (architectureHeader) {
+              architectureTimeline.fromTo(
+                architectureHeader,
+                {
+                  opacity: 0,
+                  y: isMobile ? 30 : 50,
+                },
+                {
+                  opacity: 1,
+                  y: 0,
+                  duration: isMobile ? 0.6 : 0.8,
+                  ease: "power3.out",
+                },
+              );
+            }
+
+            architectureNodes.forEach((node, index) => {
+              architectureTimeline.fromTo(
+                node,
+                {
+                  opacity: 0,
+                  y: isMobile ? 30 : 40,
+                  scale: isMobile ? 0.92 : 0.85,
+                },
+                {
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  duration: isMobile ? 0.6 : 0.7,
+                  ease: "power3.out",
+                },
+                index === 0 ? "-=0.2" : "-=0.4",
+              );
+
+              if (architectureConnectors[index]) {
+                architectureTimeline.fromTo(
+                  architectureConnectors[index],
+                  {
+                    scaleX: 0,
+                  },
+                  {
+                    scaleX: 1,
+                    duration: isMobile ? 0.35 : 0.5,
+                    ease: "power2.out",
+                  },
+                  "-=0.3",
+                );
+              }
+            });
+          }
+        }
+
         return () => {
           if (isDesktop && !reduceMotion) {
             window.removeEventListener("pointermove", pointerMove);
@@ -450,7 +544,9 @@ function ReactApp({ hero, capabilities, playground }) {
                 ${capabilities.map(
                   ({ number, title, description, variant }) => html`
                     <article
-                      className=${`react-app__card react-app__card--${variant}`}
+                      className=${`react-app__card react-app__card--${
+                        variant || "default"
+                      }`}
                     >
                       <span className="react-app__card-number">
                         ${number}
@@ -481,6 +577,41 @@ function ReactApp({ hero, capabilities, playground }) {
             </section>
           `
         : ""}
+      ${architecture
+        ? html`
+            <section className="react-app__architecture">
+              <div className="react-app__architecture-header">
+                <span>03</span>
+
+                <div>
+                  <h2>${architecture.title}</h2>
+
+                  <p>${architecture.description}</p>
+                </div>
+              </div>
+
+              <div className="react-app__architecture-flow">
+                ${architecture.nodes.map(
+                  (node, index) => html`
+                    <div className="react-app__architecture-node">
+                      <span> ${String(index + 1).padStart(2, "0")} </span>
+
+                      <strong> ${node} </strong>
+                    </div>
+
+                    ${index < architecture.nodes.length - 1
+                      ? html`
+                          <div
+                            className="react-app__architecture-connector"
+                          ></div>
+                        `
+                      : ""}
+                  `,
+                )}
+              </div>
+            </section>
+          `
+        : ""}
     </main>
   `;
 }
@@ -493,6 +624,8 @@ export default function decorate(block) {
   const capabilities = [];
 
   let playground = null;
+
+  let architecture = null;
 
   rows.forEach((row) => {
     const cells = Array.from(row.children);
@@ -538,6 +671,18 @@ export default function decorate(block) {
         description: values[2],
       };
     }
+
+    if (section === "Architecture" && values[1] && values.length >= 7) {
+      const nodes = values.slice(2, 7).filter(Boolean);
+
+      if (nodes.length) {
+        architecture = {
+          title: values[1],
+          description: "From authored content to interactive presentation.",
+          nodes,
+        };
+      }
+    }
   });
 
   if (!hero) {
@@ -551,6 +696,7 @@ export default function decorate(block) {
       hero,
       capabilities,
       playground,
+      architecture,
     }),
   );
 }

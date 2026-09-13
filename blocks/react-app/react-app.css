@@ -141,27 +141,14 @@
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
   transition: border-color 0.3s ease;
 }
-.react-app__card-number, .react-app__card h3, .react-app__card p {
-  position: relative;
-  z-index: 1;
+.react-app__card:hover {
+  border-color: rgba(124, 92, 255, 0.7);
 }
 .react-app__card--frontend {
   background: linear-gradient(145deg, rgba(124, 92, 255, 0.16), rgba(255, 255, 255, 0.02));
 }
 .react-app__card--frontend .react-app__card-number {
   color: #7c5cff;
-}
-.react-app__card--animation {
-  background: linear-gradient(145deg, rgba(0, 216, 255, 0.14), rgba(255, 255, 255, 0.02));
-}
-.react-app__card--animation .react-app__card-number {
-  color: #00d8ff;
-}
-.react-app__card--styling {
-  background: linear-gradient(145deg, rgba(255, 77, 157, 0.14), rgba(255, 255, 255, 0.02));
-}
-.react-app__card--styling .react-app__card-number {
-  color: #ff4d9d;
 }
 .react-app__card--frontend::after {
   content: "";
@@ -171,6 +158,12 @@
   background: radial-gradient(circle at 80% 20%, rgba(124, 92, 255, 0.18), transparent 35%);
   pointer-events: none;
 }
+.react-app__card--animation {
+  background: linear-gradient(145deg, rgba(0, 216, 255, 0.14), rgba(255, 255, 255, 0.02));
+}
+.react-app__card--animation .react-app__card-number {
+  color: #00d8ff;
+}
 .react-app__card--animation::after {
   content: "";
   position: absolute;
@@ -179,6 +172,12 @@
   background: radial-gradient(circle at 80% 20%, rgba(0, 216, 255, 0.18), transparent 35%);
   pointer-events: none;
 }
+.react-app__card--styling {
+  background: linear-gradient(145deg, rgba(255, 77, 157, 0.14), rgba(255, 255, 255, 0.02));
+}
+.react-app__card--styling .react-app__card-number {
+  color: #ff4d9d;
+}
 .react-app__card--styling::after {
   content: "";
   position: absolute;
@@ -186,6 +185,10 @@
   border-radius: inherit;
   background: radial-gradient(circle at 80% 20%, rgba(255, 77, 157, 0.16), transparent 35%);
   pointer-events: none;
+}
+.react-app__card-number, .react-app__card h3, .react-app__card p {
+  position: relative;
+  z-index: 1;
 }
 .react-app__card-number {
   color: #7c5cff;
@@ -226,6 +229,7 @@
 }
 .react-app__playground p {
   max-width: 500px;
+  margin: 0;
   color: #9c9cac;
   line-height: 1.7;
 }
@@ -238,6 +242,73 @@
   background: conic-gradient(from 0deg, #7c5cff, #00d8ff, #ff4d9d, #7c5cff);
   filter: blur(80px);
   opacity: 0.35;
+}
+.react-app__architecture {
+  position: relative;
+  padding: 140px 8%;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+.react-app__architecture-header {
+  display: flex;
+  gap: 60px;
+  align-items: flex-start;
+  margin-bottom: 100px;
+}
+.react-app__architecture-header > span {
+  color: #00d8ff;
+  font-family: monospace;
+}
+.react-app__architecture-header > div {
+  max-width: 900px;
+}
+.react-app__architecture-header h2 {
+  margin: 0;
+  font-size: clamp(3rem, 7vw, 7rem);
+  line-height: 0.9;
+  letter-spacing: -0.07em;
+}
+.react-app__architecture-header p {
+  max-width: 520px;
+  margin: 30px 0 0;
+  color: #9c9cac;
+  line-height: 1.7;
+}
+.react-app__architecture-flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: 20px;
+  scrollbar-width: thin;
+}
+.react-app__architecture-node {
+  position: relative;
+  min-width: 170px;
+  min-height: 170px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+  z-index: 2;
+}
+.react-app__architecture-node span {
+  color: #7c5cff;
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+.react-app__architecture-node strong {
+  font-size: 1.4rem;
+}
+.react-app__architecture-connector {
+  width: 100px;
+  height: 2px;
+  flex-shrink: 0;
+  background: linear-gradient(90deg, #7c5cff, #00d8ff);
+  transform-origin: left center;
 }
 
 @media (max-width: 900px) {
@@ -259,6 +330,24 @@
   }
   .react-app__section, .react-app__playground {
     padding: 90px 6%;
+  }
+  .react-app__architecture {
+    padding: 90px 6%;
+  }
+  .react-app__architecture-header {
+    gap: 20px;
+    flex-direction: column;
+    margin-bottom: 60px;
+  }
+  .react-app__architecture-flow {
+    align-items: flex-start;
+  }
+  .react-app__architecture-node {
+    min-width: 140px;
+    min-height: 140px;
+  }
+  .react-app__architecture-connector {
+    width: 50px;
   }
 }
 @media (max-width: 600px) {

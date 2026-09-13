@@ -9,41 +9,28 @@ $border: rgba(255, 255, 255, 0.12);
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-
   overflow: hidden;
-
   background: $bg;
   color: $text;
 
   &__hero {
     position: relative;
-
     min-height: calc(100vh - 70px);
-
     display: flex;
     align-items: center;
-
     padding: 100px 8%;
-
     box-sizing: border-box;
-
     isolation: isolate;
-
     overflow: hidden;
   }
 
   &__grid {
     position: absolute;
-
     inset: 0;
-
     z-index: 1;
-
     width: 100%;
     height: 100%;
-
     pointer-events: none;
-
     opacity: 0.32;
 
     background-image:
@@ -51,43 +38,30 @@ $border: rgba(255, 255, 255, 0.12);
       linear-gradient(90deg, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
 
     background-size: 60px 60px;
-
     background-position: 0 0;
-
     transform: scale(1.15);
-
     transform-origin: center center;
   }
 
   &__content {
     position: relative;
-
     z-index: 3;
-
     max-width: 800px;
   }
 
   &__eyebrow {
     margin: 0 0 30px;
-
     color: $accent-secondary;
-
     font-family: monospace;
-
     font-size: 0.8rem;
-
     letter-spacing: 0.22em;
   }
 
   &__title {
     margin: 0;
-
     font-size: clamp(4rem, 12vw, 10rem);
-
     line-height: 0.85;
-
     letter-spacing: -0.07em;
-
     font-weight: 800;
   }
 
@@ -97,70 +71,50 @@ $border: rgba(255, 255, 255, 0.12);
 
   &__description {
     max-width: 580px;
-
     margin: 45px 0 30px;
-
     color: $muted;
-
     font-size: 1.15rem;
-
     line-height: 1.7;
   }
 
   &__actions {
     display: flex;
-
     align-items: center;
-
     gap: 24px;
   }
 
   &__button {
     display: inline-flex;
-
     align-items: center;
     justify-content: center;
-
     padding: 14px 28px;
-
     border-radius: 999px;
-
     background: linear-gradient(120deg, $accent, $accent-secondary);
-
     color: white;
-
     font-weight: 700;
-
     text-decoration: none;
-
     transition:
       transform 0.25s ease,
       box-shadow 0.25s ease;
 
     &:hover {
       transform: translateY(-3px);
-
       box-shadow: 0 15px 40px rgba(0, 216, 255, 0.25);
     }
   }
 
   &__hint {
     color: $muted;
-
     font-size: 0.85rem;
   }
 
   &__orb {
     position: absolute;
-
     right: 10%;
     top: 20%;
-
     width: min(36vw, 420px);
     height: min(36vw, 420px);
-
     z-index: 2;
-
     pointer-events: none;
   }
 
@@ -172,7 +126,6 @@ $border: rgba(255, 255, 255, 0.12);
   &__orb-inner {
     width: 100%;
     height: 100%;
-
     border-radius: 50%;
 
     background: radial-gradient(
@@ -201,32 +154,25 @@ $border: rgba(255, 255, 255, 0.12);
 
   &__section-header {
     display: flex;
-
     justify-content: space-between;
     align-items: baseline;
-
     margin-bottom: 70px;
 
     span {
       color: $accent-secondary;
-
       font-family: monospace;
     }
 
     h2 {
       margin: 0;
-
       font-size: clamp(2.5rem, 5vw, 5rem);
-
       letter-spacing: -0.05em;
     }
   }
 
   &__cards {
     display: grid;
-
     grid-template-columns: repeat(3, 1fr);
-
     gap: 20px;
   }
 
@@ -247,6 +193,85 @@ $border: rgba(255, 255, 255, 0.12);
     );
 
     transition: border-color 0.3s ease;
+
+    &:hover {
+      border-color: rgba(124, 92, 255, 0.7);
+    }
+
+    &--frontend {
+      background: linear-gradient(
+        145deg,
+        rgba(124, 92, 255, 0.16),
+        rgba(255, 255, 255, 0.02)
+      );
+
+      .react-app__card-number {
+        color: $accent;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(
+          circle at 80% 20%,
+          rgba(124, 92, 255, 0.18),
+          transparent 35%
+        );
+        pointer-events: none;
+      }
+    }
+
+    &--animation {
+      background: linear-gradient(
+        145deg,
+        rgba(0, 216, 255, 0.14),
+        rgba(255, 255, 255, 0.02)
+      );
+
+      .react-app__card-number {
+        color: $accent-secondary;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(
+          circle at 80% 20%,
+          rgba(0, 216, 255, 0.18),
+          transparent 35%
+        );
+        pointer-events: none;
+      }
+    }
+
+    &--styling {
+      background: linear-gradient(
+        145deg,
+        rgba(255, 77, 157, 0.14),
+        rgba(255, 255, 255, 0.02)
+      );
+
+      .react-app__card-number {
+        color: #ff4d9d;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(
+          circle at 80% 20%,
+          rgba(255, 77, 157, 0.16),
+          transparent 35%
+        );
+        pointer-events: none;
+      }
+    }
   }
 
   &__card-number,
@@ -256,168 +281,62 @@ $border: rgba(255, 255, 255, 0.12);
     z-index: 1;
   }
 
-  &__card--frontend {
-    background: linear-gradient(
-      145deg,
-      rgba(124, 92, 255, 0.16),
-      rgba(255, 255, 255, 0.02)
-    );
-
-    .react-app__card-number {
-      color: $accent;
-    }
-  }
-
-  &__card--animation {
-    background: linear-gradient(
-      145deg,
-      rgba(0, 216, 255, 0.14),
-      rgba(255, 255, 255, 0.02)
-    );
-
-    .react-app__card-number {
-      color: $accent-secondary;
-    }
-  }
-
-  &__card--styling {
-    background: linear-gradient(
-      145deg,
-      rgba(255, 77, 157, 0.14),
-      rgba(255, 255, 255, 0.02)
-    );
-
-    .react-app__card-number {
-      color: #ff4d9d;
-    }
-  }
-
-  &__card--frontend::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-
-    border-radius: inherit;
-
-    background: radial-gradient(
-      circle at 80% 20%,
-      rgba(124, 92, 255, 0.18),
-      transparent 35%
-    );
-
-    pointer-events: none;
-  }
-
-  &__card--animation::after {
-    content: "";
-
-    position: absolute;
-    inset: 0;
-
-    border-radius: inherit;
-
-    background: radial-gradient(
-      circle at 80% 20%,
-      rgba(0, 216, 255, 0.18),
-      transparent 35%
-    );
-
-    pointer-events: none;
-  }
-
-  &__card--styling::after {
-    content: "";
-
-    position: absolute;
-    inset: 0;
-
-    border-radius: inherit;
-
-    background: radial-gradient(
-      circle at 80% 20%,
-      rgba(255, 77, 157, 0.16),
-      transparent 35%
-    );
-
-    pointer-events: none;
-  }
-
   &__card-number {
     color: $accent;
-
     font-family: monospace;
-
     font-size: 0.8rem;
   }
 
   &__card h3 {
     margin: 50px 0 15px;
-
     font-size: 2rem;
   }
 
   &__card p {
     margin: 0;
-
     color: $muted;
-
     line-height: 1.6;
   }
 
   &__playground {
     min-height: 70vh;
-
     position: relative;
-
     display: flex;
-
     align-items: center;
-
     border-top: 1px solid $border;
-
     overflow: hidden;
 
     > div:last-child {
       position: relative;
-
       z-index: 2;
-
       max-width: 650px;
     }
 
     span {
       color: $accent-secondary;
-
       font-family: monospace;
     }
 
     h2 {
       margin: 20px 0;
-
       font-size: clamp(3rem, 7vw, 7rem);
-
       letter-spacing: -0.07em;
-
       line-height: 0.9;
     }
 
     p {
       max-width: 500px;
-
+      margin: 0;
       color: $muted;
-
       line-height: 1.7;
     }
   }
 
   &__playground-circle {
     position: absolute;
-
     width: 45vw;
     height: 45vw;
-
     right: -10%;
-
     border-radius: 50%;
 
     background: conic-gradient(
@@ -429,8 +348,96 @@ $border: rgba(255, 255, 255, 0.12);
     );
 
     filter: blur(80px);
-
     opacity: 0.35;
+  }
+
+  &__architecture {
+    position: relative;
+    padding: 140px 8%;
+    border-top: 1px solid $border;
+    overflow: hidden;
+  }
+
+  &__architecture-header {
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+    margin-bottom: 100px;
+
+    > span {
+      color: $accent-secondary;
+      font-family: monospace;
+    }
+
+    > div {
+      max-width: 900px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(3rem, 7vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: -0.07em;
+    }
+
+    p {
+      max-width: 520px;
+      margin: 30px 0 0;
+      color: $muted;
+      line-height: 1.7;
+    }
+  }
+
+  &__architecture-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    scrollbar-width: thin;
+  }
+
+  &__architecture-node {
+    position: relative;
+    min-width: 170px;
+    min-height: 170px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 24px;
+
+    border: 1px solid $border;
+    border-radius: 24px;
+
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.01)
+    );
+
+    z-index: 2;
+
+    span {
+      color: $accent;
+      font-family: monospace;
+      font-size: 0.8rem;
+    }
+
+    strong {
+      font-size: 1.4rem;
+    }
+  }
+
+  &__architecture-connector {
+    width: 100px;
+    height: 2px;
+    flex-shrink: 0;
+
+    background: linear-gradient(90deg, $accent, $accent-secondary);
+
+    transform-origin: left center;
   }
 }
 
@@ -443,14 +450,12 @@ $border: rgba(255, 255, 255, 0.12);
     &__orb {
       width: 300px;
       height: 300px;
-
       right: -80px;
       top: 15%;
     }
 
     &__grid {
       background-size: 45px 45px;
-
       opacity: 0.24;
     }
 
@@ -461,6 +466,29 @@ $border: rgba(255, 255, 255, 0.12);
     &__section,
     &__playground {
       padding: 90px 6%;
+    }
+
+    &__architecture {
+      padding: 90px 6%;
+    }
+
+    &__architecture-header {
+      gap: 20px;
+      flex-direction: column;
+      margin-bottom: 60px;
+    }
+
+    &__architecture-flow {
+      align-items: flex-start;
+    }
+
+    &__architecture-node {
+      min-width: 140px;
+      min-height: 140px;
+    }
+
+    &__architecture-connector {
+      width: 50px;
     }
   }
 }
@@ -477,15 +505,12 @@ $border: rgba(255, 255, 255, 0.12);
 
     &__actions {
       align-items: flex-start;
-
       flex-direction: column;
     }
 
     &__section-header {
       align-items: flex-start;
-
       flex-direction: column;
-
       gap: 12px;
     }
 
