@@ -239,7 +239,6 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
           );
         } else {
           intro.from('.react-app__eyebrow', {
-            opacity: 0,
             y: isMobile ? 12 : 20,
             duration: isMobile ? 0.5 : 0.8,
             ease: 'power3.out',
@@ -248,7 +247,6 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
           intro.from(
             '.react-app__title-line',
             {
-              opacity: 0,
               y: isMobile ? 50 : 100,
               rotateX: isMobile ? 20 : 40,
               transformOrigin: 'center bottom',
@@ -262,7 +260,6 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
           intro.from(
             '.react-app__description',
             {
-              opacity: 0,
               y: isMobile ? 20 : 30,
               duration: isMobile ? 0.5 : 0.7,
               ease: 'power3.out',
@@ -273,7 +270,6 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
           intro.from(
             '.react-app__actions',
             {
-              opacity: 0,
               y: 15,
               duration: 0.5,
               ease: 'power3.out',
@@ -723,22 +719,22 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
 
                 <div className="react-app__cards">
                   ${capabilities.map(
-                  ({ number, title, description, variant }) => html`
-                    <article
-                      className=${`react-app__card react-app__card--${
-                        variant || 'default'
-                      }`}
-                    >
-                      <span className="react-app__card-number">
-                        ${number}
-                      </span>
+                    ({ number, title, description, variant }) => html`
+                      <article
+                        className=${`react-app__card react-app__card--${
+                          variant || 'default'
+                        }`}
+                      >
+                        <span className="react-app__card-number">
+                          ${number}
+                        </span>
 
-                      <h3>${title}</h3>
+                        <h3>${title}</h3>
 
-                      <p>${description}</p>
-                    </article>
-                  `,
-                )}
+                        <p>${description}</p>
+                      </article>
+                    `,
+                  )}
                 </div>
               </section>
             `
@@ -791,25 +787,25 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
                   aria-label="Application architecture"
                 >
                   ${architecture.nodes.map(
-                  (node, index) => html`
-                    <div className="react-app__architecture-node">
-                      <span> ${String(index + 1).padStart(2, '0')} </span>
+                    (node, index) => html`
+                      <div className="react-app__architecture-node">
+                        <span> ${String(index + 1).padStart(2, '0')} </span>
 
-                      <strong> ${node} </strong>
-                    </div>
+                        <strong> ${node} </strong>
+                      </div>
 
-                    ${
-                      index < architecture.nodes.length - 1
-                        ? html`
-                            <div
-                              className="react-app__architecture-connector"
-                              aria-hidden="true"
-                            ></div>
-                          `
-                        : ''
-                    }
-                  `,
-                )}
+                      ${
+                        index < architecture.nodes.length - 1
+                          ? html`
+                              <div
+                                className="react-app__architecture-connector"
+                                aria-hidden="true"
+                              ></div>
+                            `
+                          : ''
+                      }
+                    `,
+                  )}
                 </div>
               </section>
             `
