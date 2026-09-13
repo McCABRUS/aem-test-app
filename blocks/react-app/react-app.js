@@ -8,15 +8,15 @@ const html = htm.bind(React.createElement);
 
 gsap.registerPlugin(ScrollTrigger);
 
-function ReactApp() {
+function ReactApp({ hero, capabilities, playground }) {
   const heroRef = useRef(null);
   const orbRef = useRef(null);
 
   useEffect(() => {
-    const hero = heroRef.current;
+    const heroElement = heroRef.current;
     const orb = orbRef.current;
 
-    if (!hero || !orb) {
+    if (!heroElement || !orb) {
       return undefined;
     }
 
@@ -26,7 +26,7 @@ function ReactApp() {
 
     const cards = gsap.utils.toArray(".react-app__card");
 
-    const playground = document.querySelector(".react-app__playground");
+    const playgroundElement = document.querySelector(".react-app__playground");
 
     const intro = gsap.timeline();
 
@@ -88,7 +88,7 @@ function ReactApp() {
       yPercent: 10,
       ease: "none",
       scrollTrigger: {
-        trigger: hero,
+        trigger: heroElement,
         start: "top top",
         end: "bottom top",
         scrub: true,
@@ -199,28 +199,26 @@ function ReactApp() {
     });
 
     let playgroundTimeline;
+    let playgroundCircleAnimation;
 
-    if (playground) {
-      const playgroundCircle = playground.querySelector(
+    if (playgroundElement) {
+      const playgroundCircle = playgroundElement.querySelector(
         ".react-app__playground-circle",
       );
 
-      const playgroundNumber = playground.querySelector(
-        ":scope > div:last-child > span",
+      const playgroundContent = playgroundElement.querySelector(
+        ":scope > div:last-child",
       );
 
-      const playgroundTitle = playground.querySelector(
-        ":scope > div:last-child > h2",
-      );
+      const playgroundNumber = playgroundContent?.querySelector("span");
 
-      const playgroundDescription = playground.querySelector(
-        ":scope > div:last-child > p",
-      );
+      const playgroundTitle = playgroundContent?.querySelector("h2");
+
+      const playgroundDescription = playgroundContent?.querySelector("p");
 
       playgroundTimeline = gsap.timeline({
-        paused: true,
         scrollTrigger: {
-          trigger: playground,
+          trigger: playgroundElement,
           start: "top 75%",
           once: true,
         },
@@ -300,7 +298,7 @@ function ReactApp() {
       }
 
       if (playgroundCircle) {
-        gsap.to(playgroundCircle, {
+        playgroundCircleAnimation = gsap.to(playgroundCircle, {
           scale: 1.15,
           rotation: 30,
           duration: 6,
@@ -332,6 +330,10 @@ function ReactApp() {
         playgroundTimeline.kill();
       }
 
+      if (playgroundCircleAnimation) {
+        playgroundCircleAnimation.kill();
+      }
+
       cardAnimations.forEach(
         ({ animation, card, handleEnter, handleLeave }) => {
           animation.kill();
@@ -360,20 +362,17 @@ function ReactApp() {
         </div>
 
         <div className="react-app__content">
-          <p className="react-app__eyebrow">AEM · REACT · GSAP · SCSS</p>
+          <p className="react-app__eyebrow">${hero.eyebrow}</p>
 
           <h1 className="react-app__title">
-            <span className="react-app__title-line"> BUILD </span>
-
-            <span className="react-app__title-line"> FOR THE </span>
-
-            <span className="react-app__title-line"> WEB. </span>
+            ${hero.title.map(
+              (line) => html`
+                <span className="react-app__title-line"> ${line} </span>
+              `,
+            )}
           </h1>
 
-          <p className="react-app__description">
-            A small Edge Delivery Services experiment combining React
-            components, GSAP animation and Sass without external assets.
-          </p>
+          <p className="react-app__description">${hero.description}</p>
 
           <div className="react-app__actions">
             <a href="#capabilities" className="react-app__button"> Explore </a>
@@ -383,69 +382,114 @@ function ReactApp() {
         </div>
       </section>
 
-      <section className="react-app__section" id="capabilities">
-        <div className="react-app__section-header">
-          <span>01</span>
+      ${capabilities.length
+        ? html`
+            <section className="react-app__section" id="capabilities">
+              <div className="react-app__section-header">
+                <span>01</span>
 
-          <h2>Capabilities</h2>
-        </div>
+                <h2>Capabilities</h2>
+              </div>
 
-        <div className="react-app__cards">
-          <article className="react-app__card">
-            <span className="react-app__card-number"> 01 </span>
+              <div className="react-app__cards">
+                ${capabilities.map(
+                  ({ number, title, description }) => html`
+                    <article className="react-app__card">
+                      <span className="react-app__card-number">
+                        ${number}
+                      </span>
 
-            <h3>React</h3>
+                      <h3>${title}</h3>
 
-            <p>
-              A component-driven interface mounted inside the Edge Delivery
-              Services runtime.
-            </p>
-          </article>
+                      <p>${description}</p>
+                    </article>
+                  `,
+                )}
+              </div>
+            </section>
+          `
+        : ""}
+      ${playground
+        ? html`
+            <section className="react-app__playground">
+              <div className="react-app__playground-circle"></div>
 
-          <article className="react-app__card">
-            <span className="react-app__card-number"> 02 </span>
+              <div>
+                <span>02</span>
 
-            <h3>GSAP</h3>
+                <h2>${playground.title}</h2>
 
-            <p>
-              Timeline-based entrance animations, scroll interactions and
-              continuous motion.
-            </p>
-          </article>
-
-          <article className="react-app__card">
-            <span className="react-app__card-number"> 03 </span>
-
-            <h3>Sass</h3>
-
-            <p>
-              Structured styling using variables, nesting and reusable visual
-              tokens.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section className="react-app__playground">
-        <div className="react-app__playground-circle"></div>
-
-        <div>
-          <span>02</span>
-
-          <h2>Creative code playground</h2>
-
-          <p>
-            Everything here is generated with CSS, React and JavaScript. No
-            image assets required.
-          </p>
-        </div>
-      </section>
+                <p>${playground.description}</p>
+              </div>
+            </section>
+          `
+        : ""}
     </main>
   `;
 }
 
 export default function decorate(block) {
+  const rows = Array.from(block.children);
+
+  let hero = null;
+
+  const capabilities = [];
+
+  let playground = null;
+
+  rows.forEach((row) => {
+    const cells = Array.from(row.children);
+
+    if (!cells.length) {
+      return;
+    }
+
+    const values = cells.map((cell) => cell.textContent.trim());
+
+    if (values.length === 1 && values[0] === "React App") {
+      return;
+    }
+
+    const section = values[0] || "";
+
+    if (section === "Hero" && values[1] && values[2] && values[3]) {
+      hero = {
+        eyebrow: values[1],
+        title: values[2]
+          .split("|")
+          .map((line) => line.trim())
+          .filter(Boolean),
+        description: values[3],
+      };
+    }
+
+    if (section === "Capabilities" && values[1] && values[2]) {
+      capabilities.push({
+        number: String(capabilities.length + 1).padStart(2, "0"),
+        title: values[1],
+        description: values[2],
+      });
+    }
+
+    if (section === "Playground" && values[1] && values[2]) {
+      playground = {
+        title: values[1],
+        description: values[2],
+      };
+    }
+  });
+
+  if (!hero) {
+    return;
+  }
+
   const root = createRoot(block);
 
-  root.render(React.createElement(ReactApp));
+  root.render(
+    React.createElement(ReactApp, {
+      hero,
+      capabilities,
+      playground,
+    }),
+  );
 }
