@@ -92,7 +92,6 @@ $border: rgba(255, 255, 255, 0.12);
 
     background: linear-gradient(120deg, $accent, $accent-secondary);
 
-    color: white;
     font-weight: 700;
     text-decoration: none;
 
@@ -111,6 +110,14 @@ $border: rgba(255, 255, 255, 0.12);
 
       outline-offset: 5px;
     }
+  }
+
+  &__actions a {
+    color: white;
+  }
+
+  &__actions a:hover {
+    text-decoration: none;
   }
 
   &__hint {
