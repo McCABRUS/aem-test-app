@@ -1,4 +1,4 @@
-# AEM Edge Delivery Services
+# AEM Edge Delivery Services — Interactive UI
 
 ![AEM](https://img.shields.io/badge/Adobe-AEM%20Edge%20Delivery%20Services-FF0000)
 ![React](https://img.shields.io/badge/React-19-61DAFB)
@@ -6,7 +6,7 @@
 ![SCSS](https://img.shields.io/badge/SCSS-styling-CC6699)
 ![DA.live](https://img.shields.io/badge/Content-DA.live-1473E6)
 
-A small application-centric UI experiment built on top of Adobe's Edge Delivery Services boilerplate.
+An application-centric interactive UI built on top of Adobe's Edge Delivery Services boilerplate.
 
 The project explores how a content-authored AEM Edge Delivery Services site can combine:
 
@@ -19,7 +19,7 @@ The project explores how a content-authored AEM Edge Delivery Services site can 
 - Performance-conscious animation
 - Reusable Edge Delivery fragments for navigation and footer
 
-The goal is not to reproduce a predefined visual design. The goal is to demonstrate the engineering decisions behind a modern, interactive UI implemented within the Edge Delivery Services model.
+The project explores how to build a modern, interactive web experience within the Edge Delivery Services model while keeping content authoring, application logic, motion, accessibility, and performance concerns clearly separated.
 
 ---
 
@@ -39,9 +39,9 @@ https://github.com/McCABRUS/aem-test-app
 
 ---
 
-## What This Project Demonstrates
+## Project Focus
 
-This implementation focuses on the following Senior UI Engineer concerns:
+This implementation focuses on a set of practical frontend engineering concerns:
 
 ### Content-driven UI
 
@@ -459,6 +459,28 @@ blocks/
 
 The implementation intentionally avoids unnecessary runtime work.
 
+## Lighthouse / Core Web Vitals
+
+Performance was measured against the published `.aem.live` site using Lighthouse on both mobile and desktop conditions.
+
+The optimization cycle focused on the mobile critical path. The baseline showed a mobile LCP of roughly 3.1s and TBT of roughly 124ms. After lazy-loading GSAP and ScrollTrigger, the final measured mobile result improved to approximately 2.7s LCP and 70ms TBT. Desktop reached approximately 0.8s LCP, 0ms TBT and a 100 Performance score in the final run.
+
+```text
+Before
+Mobile LCP  ≈ 3.1s
+Mobile TBT  ≈ 124ms
+        ↓
+Lazy-load GSAP / ScrollTrigger
+        ↓
+After
+Mobile LCP  ≈ 2.7s
+Mobile TBT  ≈ 70ms
+Desktop LCP ≈ 0.8s
+Desktop TBT ≈ 0ms
+```
+
+The optimization deliberately stopped at this point rather than trading away the visual interaction model for marginal Lighthouse gains. The remaining mobile LCP gap is documented as a trade-off rather than hidden behind aggressive removal of animation or application behavior.
+
 ## High-frequency pointer interaction
 
 Instead of creating a new GSAP tween for every `pointermove`, the orb uses:
@@ -501,6 +523,26 @@ Event listeners for pointer and hover interactions are explicitly removed during
 ## Dependency scope
 
 Large dependencies are used only by the block that needs them.
+
+## Lazy-loaded animation runtime
+
+GSAP and ScrollTrigger are loaded dynamically after the initial React render rather than as static imports in the main module. The animation runtime is initialized on the next animation frame, keeping the initial module graph focused on rendering the application content.
+
+```text
+Initial render
+    ↓
+React / content available
+    ↓
+requestAnimationFrame
+    ↓
+Dynamic GSAP + ScrollTrigger import
+    ↓
+Animation initialization
+```
+
+This keeps the visual behavior intact while reducing the amount of animation-related JavaScript competing with the initial render on constrained devices. The implementation also checks for cancellation before and after the dynamic import so the animation context is not initialized after the React component has unmounted.
+
+Reduced-motion users can still skip continuous motion and scroll-driven animation paths, while the content remains fully visible.
 
 ---
 
@@ -565,6 +607,8 @@ Full lint:
 ```bash
 npm run lint
 ```
+
+The project also uses GitHub Actions to run the linting workflow in CI, providing an automated quality gate for JavaScript and CSS/SCSS changes.
 
 ---
 
@@ -663,9 +707,9 @@ This keeps the demo focused on UI engineering rather than asset production.
 
 ---
 
-# What I Would Discuss in a Senior UI Engineer Interview
+# Engineering Highlights
 
-This project provides several useful discussion points.
+The project brings together several frontend engineering patterns in a single Edge Delivery Services experience.
 
 ### AEM / EDS architecture
 
@@ -702,20 +746,42 @@ This project provides several useful discussion points.
 
 ### Performance
 
-- high-frequency pointer events
-- transform-based animation
-- responsive event registration
-- dependency scope
-- avoiding unnecessary DOM work
+Performance is treated as part of the implementation rather than a final optimization pass.
 
-### CMS-driven UI
+### Animation efficiency
 
-- authorable variants
-- content validation
-- separation between content and presentation
-- handling malformed authoring input safely
+High-frequency pointer interaction uses `gsap.quickTo()` instead of creating new tweens for every pointer update.
 
----
+### Rendering strategy
+
+Motion primarily uses `transform` and `opacity` to minimize layout-affecting work.
+
+### Responsive behavior
+
+Pointer-based interactions are restricted to desktop conditions, while mobile uses reduced movement and touch-oriented behavior.
+
+### Reduced motion
+
+The animation system respects `prefers-reduced-motion` and leaves content fully visible when motion is reduced.
+
+### Deferred animation dependencies
+
+GSAP and ScrollTrigger are loaded dynamically after the initial React render so they do not need to be part of the initial module graph.
+
+### Lighthouse results
+
+The final measurements were taken against the published Edge Delivery Services site.
+
+| Metric      | Mobile | Desktop |
+| ----------- | -----: | ------: |
+| Performance |     95 |     100 |
+| FCP         |  1.8 s |   0.5 s |
+| LCP         |  2.7 s |   0.8 s |
+| Speed Index |  1.9 s |   0.6 s |
+| TBT         |  70 ms |    0 ms |
+| CLS         |  ~0.00 |   ~0.00 |
+
+An earlier iteration measured approximately 3.1 s LCP and 124 ms TBT on mobile. Deferring GSAP/ScrollTrigger reduced the mobile LCP and main-thread blocking while preserving the visual motion system.
 
 # Known Trade-offs
 
@@ -731,7 +797,7 @@ The page uses a generated visual language rather than a formal design system.
 
 ### Testing
 
-The current exercise focuses primarily on integration and UI behavior. Unit and automated browser tests would be the next engineering step.
+The current exercise focuses primarily on integration and UI behavior. ESLint and Stylelint are enforced through `npm run lint` and the GitHub Actions workflow. Unit and automated browser tests would be the next engineering step.
 
 ### Navigation
 
@@ -759,7 +825,7 @@ Formal design-token system
 Storybook or component documentation
 ```
 
-These are intentionally left outside the current scope to keep the exercise focused.
+These areas can be introduced as the project evolves.
 
 ---
 
@@ -795,9 +861,9 @@ aem-test-app/
 
 ---
 
-# Evaluation Summary
+# Technology & Engineering Summary
 
-This experiment intentionally demonstrates more than a visual implementation.
+The project combines content-driven authoring, application-oriented UI, animation, accessibility, responsive behavior, and performance-conscious implementation.
 
 | Area                              | Demonstrated |
 | --------------------------------- | ------------ |
