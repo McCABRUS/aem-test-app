@@ -8,12 +8,184 @@ const html = htm.bind(React.createElement);
 
 gsap.registerPlugin(ScrollTrigger);
 
+const CAPABILITY_VARIANTS = new Set([
+  "frontend",
+  "animation",
+  "styling",
+  "default",
+]);
+
+function normalizeVariant(value) {
+  const normalized = (value || "default")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
+
+  return CAPABILITY_VARIANTS.has(normalized) ? normalized : "default";
+}
+
+function parseHero(values) {
+  if (values.length < 4 || values[0] !== "Hero") {
+    return null;
+  }
+
+  const eyebrow = values[1].trim();
+
+  const title = values[2]
+    .split("|")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const description = values[3].trim();
+
+  if (!eyebrow || !title.length || !description) {
+    return null;
+  }
+
+  return {
+    eyebrow,
+    title,
+    description,
+  };
+}
+
+function parseCapability(values, index) {
+  if (values.length < 3 || values[0] !== "Capabilities") {
+    return null;
+  }
+
+  const title = values[1].trim();
+  const description = values[2].trim();
+
+  if (!title || !description) {
+    return null;
+  }
+
+  return {
+    number: String(index + 1).padStart(2, "0"),
+    title,
+    description,
+    variant: normalizeVariant(values[3]),
+  };
+}
+
+function parsePlayground(values) {
+  if (values.length < 3 || values[0] !== "Playground") {
+    return null;
+  }
+
+  const title = values[1].trim();
+  const description = values[2].trim();
+
+  if (!title || !description) {
+    return null;
+  }
+
+  return {
+    title,
+    description,
+  };
+}
+
+function parseArchitecture(values) {
+  if (values.length < 4 || values[0] !== "Architecture") {
+    return null;
+  }
+
+  const title = values[1].trim();
+
+  const nodes = values
+    .slice(2)
+    .map((value) => value.trim())
+    .filter(Boolean);
+
+  if (!title || nodes.length < 2) {
+    return null;
+  }
+
+  return {
+    title,
+    description: "From authored content to interactive presentation.",
+    nodes,
+  };
+}
+
+function parseContent(block) {
+  const rows = Array.from(block.children);
+
+  let hero = null;
+  let playground = null;
+  let architecture = null;
+
+  const capabilities = [];
+
+  rows.forEach((row) => {
+    const cells = Array.from(row.children);
+
+    if (!cells.length) {
+      return;
+    }
+
+    const values = cells.map((cell) => cell.textContent.trim());
+
+    if (values.length === 1 && values[0] === "React App") {
+      return;
+    }
+
+    if (!hero) {
+      const parsedHero = parseHero(values);
+
+      if (parsedHero) {
+        hero = parsedHero;
+        return;
+      }
+    }
+
+    if (values[0] === "Capabilities") {
+      const capability = parseCapability(values, capabilities.length);
+
+      if (capability) {
+        capabilities.push(capability);
+      }
+
+      return;
+    }
+
+    if (!playground) {
+      const parsedPlayground = parsePlayground(values);
+
+      if (parsedPlayground) {
+        playground = parsedPlayground;
+
+        return;
+      }
+    }
+
+    if (!architecture) {
+      const parsedArchitecture = parseArchitecture(values);
+
+      if (parsedArchitecture) {
+        architecture = parsedArchitecture;
+      }
+    }
+  });
+
+  return {
+    hero,
+    capabilities,
+    playground,
+    architecture,
+  };
+}
+
 function ReactApp({ hero, capabilities, playground, architecture }) {
   const heroRef = useRef(null);
   const orbRef = useRef(null);
 
   useEffect(() => {
     const heroElement = heroRef.current;
+
     const orb = orbRef.current;
 
     if (!heroElement || !orb) {
@@ -501,10 +673,14 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
 
   return html`
     <main className="react-app">
-      <section className="react-app__hero" ref=${heroRef}>
-        <div className="react-app__grid"></div>
+      <section
+        className="react-app__hero"
+        ref=${heroRef}
+        aria-labelledby="react-app-title"
+      >
+        <div className="react-app__grid" aria-hidden="true"></div>
 
-        <div className="react-app__orb" ref=${orbRef}>
+        <div className="react-app__orb" ref=${orbRef} aria-hidden="true">
           <div className="react-app__orb-motion">
             <div className="react-app__orb-inner"></div>
           </div>
@@ -513,7 +689,7 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
         <div className="react-app__content">
           <p className="react-app__eyebrow">${hero.eyebrow}</p>
 
-          <h1 className="react-app__title">
+          <h1 className="react-app__title" id="react-app-title">
             ${hero.title.map(
               (line) => html`
                 <span className="react-app__title-line"> ${line} </span>
@@ -533,11 +709,15 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
 
       ${capabilities.length
         ? html`
-            <section className="react-app__section" id="capabilities">
+            <section
+              className="react-app__section"
+              id="capabilities"
+              aria-labelledby="capabilities-title"
+            >
               <div className="react-app__section-header">
                 <span>01</span>
 
-                <h2>Capabilities</h2>
+                <h2 id="capabilities-title">Capabilities</h2>
               </div>
 
               <div className="react-app__cards">
@@ -564,13 +744,19 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
         : ""}
       ${playground
         ? html`
-            <section className="react-app__playground">
-              <div className="react-app__playground-circle"></div>
+            <section
+              className="react-app__playground"
+              aria-labelledby="playground-title"
+            >
+              <div
+                className="react-app__playground-circle"
+                aria-hidden="true"
+              ></div>
 
               <div>
                 <span>02</span>
 
-                <h2>${playground.title}</h2>
+                <h2 id="playground-title">${playground.title}</h2>
 
                 <p>${playground.description}</p>
               </div>
@@ -579,18 +765,24 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
         : ""}
       ${architecture
         ? html`
-            <section className="react-app__architecture">
+            <section
+              className="react-app__architecture"
+              aria-labelledby="architecture-title"
+            >
               <div className="react-app__architecture-header">
                 <span>03</span>
 
                 <div>
-                  <h2>${architecture.title}</h2>
+                  <h2 id="architecture-title">${architecture.title}</h2>
 
                   <p>${architecture.description}</p>
                 </div>
               </div>
 
-              <div className="react-app__architecture-flow">
+              <div
+                className="react-app__architecture-flow"
+                aria-label="Application architecture"
+              >
                 ${architecture.nodes.map(
                   (node, index) => html`
                     <div className="react-app__architecture-node">
@@ -603,6 +795,7 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
                       ? html`
                           <div
                             className="react-app__architecture-connector"
+                            aria-hidden="true"
                           ></div>
                         `
                       : ""}
@@ -617,73 +810,7 @@ function ReactApp({ hero, capabilities, playground, architecture }) {
 }
 
 export default function decorate(block) {
-  const rows = Array.from(block.children);
-
-  let hero = null;
-
-  const capabilities = [];
-
-  let playground = null;
-
-  let architecture = null;
-
-  rows.forEach((row) => {
-    const cells = Array.from(row.children);
-
-    if (!cells.length) {
-      return;
-    }
-
-    const values = cells.map((cell) => cell.textContent.trim());
-
-    if (values.length === 1 && values[0] === "React App") {
-      return;
-    }
-
-    const section = values[0] || "";
-
-    if (section === "Hero" && values[1] && values[2] && values[3]) {
-      hero = {
-        eyebrow: values[1],
-        title: values[2]
-          .split("|")
-          .map((line) => line.trim())
-          .filter(Boolean),
-        description: values[3],
-      };
-    }
-
-    if (section === "Capabilities" && values[1] && values[2]) {
-      capabilities.push({
-        number: String(capabilities.length + 1).padStart(2, "0"),
-        title: values[1],
-        description: values[2],
-        variant: (values[3] || "default")
-          .toLowerCase()
-          .replace(/\s+/g, "-")
-          .replace(/[^a-z0-9-]/g, ""),
-      });
-    }
-
-    if (section === "Playground" && values[1] && values[2]) {
-      playground = {
-        title: values[1],
-        description: values[2],
-      };
-    }
-
-    if (section === "Architecture" && values[1] && values.length >= 7) {
-      const nodes = values.slice(2, 7).filter(Boolean);
-
-      if (nodes.length) {
-        architecture = {
-          title: values[1],
-          description: "From authored content to interactive presentation.",
-          nodes,
-        };
-      }
-    }
-  });
+  const { hero, capabilities, playground, architecture } = parseContent(block);
 
   if (!hero) {
     return;

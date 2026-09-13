@@ -80,6 +80,10 @@
   transform: translateY(-3px);
   box-shadow: 0 15px 40px rgba(0, 216, 255, 0.25);
 }
+.react-app__button:focus-visible {
+  outline: 3px solid rgba(0, 216, 255, 0.9);
+  outline-offset: 5px;
+}
 .react-app__hint {
   color: #9c9cac;
   font-size: 0.85rem;
@@ -143,6 +147,9 @@
 }
 .react-app__card:hover {
   border-color: rgba(124, 92, 255, 0.7);
+}
+.react-app__card:focus-within {
+  border-color: rgba(0, 216, 255, 0.8);
 }
 .react-app__card--frontend {
   background: linear-gradient(145deg, rgba(124, 92, 255, 0.16), rgba(255, 255, 255, 0.02));
@@ -368,5 +375,15 @@
   }
   .react-app__grid {
     opacity: 0.18;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .react-app,
+  .react-app * {
+    scroll-behavior: auto;
+  }
+  .react-app__button,
+  .react-app__card {
+    transition: none;
   }
 }

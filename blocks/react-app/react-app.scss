@@ -89,17 +89,27 @@ $border: rgba(255, 255, 255, 0.12);
     justify-content: center;
     padding: 14px 28px;
     border-radius: 999px;
+
     background: linear-gradient(120deg, $accent, $accent-secondary);
+
     color: white;
     font-weight: 700;
     text-decoration: none;
+
     transition:
       transform 0.25s ease,
       box-shadow 0.25s ease;
 
     &:hover {
       transform: translateY(-3px);
+
       box-shadow: 0 15px 40px rgba(0, 216, 255, 0.25);
+    }
+
+    &:focus-visible {
+      outline: 3px solid rgba(0, 216, 255, 0.9);
+
+      outline-offset: 5px;
     }
   }
 
@@ -198,6 +208,10 @@ $border: rgba(255, 255, 255, 0.12);
       border-color: rgba(124, 92, 255, 0.7);
     }
 
+    &:focus-within {
+      border-color: rgba(0, 216, 255, 0.8);
+    }
+
     &--frontend {
       background: linear-gradient(
         145deg,
@@ -214,11 +228,13 @@ $border: rgba(255, 255, 255, 0.12);
         position: absolute;
         inset: 0;
         border-radius: inherit;
+
         background: radial-gradient(
           circle at 80% 20%,
           rgba(124, 92, 255, 0.18),
           transparent 35%
         );
+
         pointer-events: none;
       }
     }
@@ -239,11 +255,13 @@ $border: rgba(255, 255, 255, 0.12);
         position: absolute;
         inset: 0;
         border-radius: inherit;
+
         background: radial-gradient(
           circle at 80% 20%,
           rgba(0, 216, 255, 0.18),
           transparent 35%
         );
+
         pointer-events: none;
       }
     }
@@ -264,11 +282,13 @@ $border: rgba(255, 255, 255, 0.12);
         position: absolute;
         inset: 0;
         border-radius: inherit;
+
         background: radial-gradient(
           circle at 80% 20%,
           rgba(255, 77, 157, 0.16),
           transparent 35%
         );
+
         pointer-events: none;
       }
     }
@@ -337,6 +357,7 @@ $border: rgba(255, 255, 255, 0.12);
     width: 45vw;
     height: 45vw;
     right: -10%;
+
     border-radius: 50%;
 
     background: conic-gradient(
@@ -517,5 +538,17 @@ $border: rgba(255, 255, 255, 0.12);
     &__grid {
       opacity: 0.18;
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .react-app,
+  .react-app * {
+    scroll-behavior: auto;
+  }
+
+  .react-app__button,
+  .react-app__card {
+    transition: none;
   }
 }
